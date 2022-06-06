@@ -25,6 +25,10 @@
         <td>{{item.quantity}}</td>
         <td>{{item.unit}}</td>
         <td>{{item.unit_price}}</td>
+        <th><div>
+          <button type="submit" class="btn btn-secondary my-2 my-lg-0">Sprzedaj</button>
+          </form>
+          </div></th>
       </tr>
       
       {% endfor %}
@@ -40,7 +44,7 @@
           <label for="body">Ilość</label>
           {{ form.quantity }}
           </div>
-          <th> {{form.hidden_tag()}}
+          <th> 
             <div class="form-group text-secondary">
             <label for="name">Jednostka</label>
             {{ form.unit}}
