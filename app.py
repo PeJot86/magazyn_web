@@ -22,7 +22,7 @@ def homepage():
 def add_product():    
     form = ProductForm ()
     errors = None
-    list_items = items
+    sort_items = sorted(items, key=lambda x: (x['name']))
     if request.method == 'POST':
         if form.validate_on_submit():
                 dict = { 
@@ -33,7 +33,7 @@ def add_product():
                 items.append(dict)
                  
         return redirect(url_for("add_product"))
-    return render_template ("list_product.html", form=form, list_items = list_items, errors = errors)
+    return render_template ("list_product.html", form=form, list_items = sort_items, errors = errors)
     
 
 @app.route('/<product_name>', methods=["GET", "POST"])
@@ -45,10 +45,19 @@ def edit_product(product_name):
                 i["name"] = product_name
                 i["quantity"] = float(form.quantity.data)
                 i["unit"] = form.unit.data
-                i["unit_price"] = float(form.unit_price.data)
-                
+                i["unit_price"] = float(form.unit_price.data)          
            return redirect(url_for("add_product"))     
     return render_template ("edit_product.html", form=form, product_name= product_name, select_item = select_item)
+
+
+@app.route('/delete/<product_name>', methods=["GET","POST"])
+def delete_product(product_name):    
+    form = ProductForm ()
+    for i in range(len(items)):
+        if items[i]['name'] == product_name:
+            del items[i]
+            break
+    return render_template ("edit_product.html", form=form, product_name= product_name)
 
 
 
