@@ -21,14 +21,12 @@
       {% for item in list_items %}
       <tr>
         <th scope="row"></th>
-        <td>{{item.name}}</td>
+        <td><a href="/{{ item.name }}">{{item.name}}</a></td>
         <td>{{item.quantity}}</td>
         <td>{{item.unit}}</td>
         <td>{{item.unit_price}}</td>
-        <th><div>
-          <button type="submit" class="btn btn-secondary my-2 my-lg-0">Sprzedaj</button>
-          </form>
-          </div></th>
+        <td><input class="btn btn-primary btn-sm" type="submit" value="Usuń"></td>
+       
       </tr>
       
       {% endfor %}
@@ -54,13 +52,10 @@
               {{ form.unit_price }}
               </div>
       <th><div>
-      <button type="submit" class="btn btn-secondary my-2 my-lg-0">Dodaj</button>
+      <button type="submit" class="btn btn-primary my-2 my-lg-0">Dodaj</button>
       </form>
       </div></th>
       </tr>
     </tbody>
-
-
-
     
     {% endblock %}
