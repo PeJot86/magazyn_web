@@ -1,5 +1,10 @@
 {% extends "base.html" %}
-{% set active_page = 'products' %}
+{% block styles %}
+ {{super()}}
+  <link rel="stylesheet"
+  href="{{url_for('static', filename='css/style.css')}}">
+ {% endblock %}
+
 {% block content %}
 
 
@@ -26,6 +31,7 @@
         <td>{{item.unit}}</td>
         <td>{{item.unit_price}}</td>
           <td><a class="btn btn-success btn-sm" href="{{ url_for('sell_product', product_name=item.name) }}" role="button">Sprzedaj</a></td>
+          
       </tr>
       
       {% endfor %}
@@ -51,7 +57,7 @@
               {{ form.unit_price }}
               </div>
       <th><div>
-      <button type="submit" class="btn btn-primary btn-sm my-2 my-lg-0">Dodaj</button>
+      <button type="submit" class="btn btn-primary btn-sm my-2 my-lg-0">Kup</button>
       </form>
       </div></th>
       </tr>

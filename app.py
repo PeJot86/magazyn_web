@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from forms import  ProductForm
 import csv
-
+import os.path
 
 
 def load_items_from_csv():
@@ -23,8 +23,11 @@ def export_items_to_csv():
 items = []
 sold_list =[]
 
+
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mix"
+
 load_items_from_csv()
 
 
@@ -72,9 +75,10 @@ def delete_product(product_name):
     form = ProductForm ()
     for i in range(len(items)):
         if items[i]['name'] == product_name:
-            del (items[i])
+            del items[i]
+            break
         export_items_to_csv()
-    return render_template ("edit_product.html", form=form, product_name= product_name)
+    return redirect(url_for("add_product"))   
 
 
 @app.route('/sell/<product_name>', methods=["GET", "POST"])
@@ -86,10 +90,9 @@ def sell_product (product_name):
             quant_numb = i['quantity']
             sell_quant_sum = quant_numb - sell_quantity
             i['quantity'] = sell_quant_sum
-            sold_list.append ({"Name": product_name, "quantity" : sell_quantity, "unit" : i["unit"], "unit_price" : i["unit_price"]})
+            sold_list.append ({"name": product_name, "quantity" : sell_quantity, "unit" : i["unit"], "unit_price" : i["unit_price"]})
             export_items_to_csv()
-    return render_template ("list_product.html", form=form, product_name= product_name)        
-
+    return redirect(url_for("add_product"))   
 
 
 
