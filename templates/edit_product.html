@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dashboard.css') }}">
 
 <h5>Edytuj:</h5>
 
@@ -23,8 +23,8 @@
       <td>{{item.quantity}}</td>
       <td>{{item.unit}}</td>
       <td>{{item.unit_price}}</td>
-      <td><a class="btn btn-danger btn-sm" href="{{ url_for('delete_product', product_name=item.name) }}" role="button">Usuń</a></td>
-      {% endfor %}
+      <td><a class="btn btn-danger btn-sm" href="{{url_for('delete_product', product_name=item.name) }}" role="button">Usuń</a></td>
+     
 
     </tr>
   </form>
@@ -37,16 +37,16 @@
      </div>
      <th> <div class="form-group text-secondary">
       <label for="quantity"></label>
-       {{ form.quantity }}
+       {{ form.quantity (placeholder=item.quantity)}}
        </div>
        <th> 
          <div class="form-group text-secondary">
          <label for="unit"></label>
-         {{ form.unit}}
+         {{ form.unit (placeholder=item.unit)}}
          </div>
          <th> <div class="form-group text-secondary">
            <label for="unit_price"></label>
-           {{ form.unit_price }}
+           {{ form.unit_price (placeholder=item.unit_price)}}
            </div>
    <th><div>
     <input class="btn btn-primary btn-sm" type="submit" value="Zmień">
@@ -54,5 +54,5 @@
    </div></th>
    </tr>
  </tbody>
-
+ {% endfor %}
  {% endblock %}
