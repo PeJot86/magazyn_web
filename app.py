@@ -1,43 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from forms import  ProductForm, SellForm
-import csv
-
-
-
-def load_items_from_csv():
-    with open('Magazyn.csv', newline='', encoding="utf-8") as csvfile:
-        csvreader = csv.DictReader(csvfile)
-        for i in csvreader:
-            items.append ({"name" : i['name'], "quantity" : float(i['quantity']), "unit" : i['unit'], "unit_price" : float(i['unit_price'])})
-
-
-def export_items_to_csv():
-    with open('Magazyn.csv', mode='w', encoding="utf-8") as csv_file:
-        fieldnames = ['name', 'quantity', 'unit', 'unit_price']
-        csvwriter = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        csvwriter.writeheader()
-        for n in items:
-            csvwriter.writerow(n)
-
-
-def export_sales_to_csv():
-    with open('Magazyn_sold.csv', mode='w', encoding="utf-8") as csv_file:
-        fieldnames = ['name', 'quantity', 'unit', 'unit_price']
-        csvwriter = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        csvwriter.writeheader()
-        for n in sold_list:
-            csvwriter.writerow(n)
-
-
-def load_sales_from_csv():
-    with open('Magazyn_sold.csv', newline='', encoding="utf-8") as csvfile:
-        csvreader = csv.DictReader(csvfile)
-        for i in csvreader:
-            sold_list.append ({"name" : i['name'], "quantity" : float(i['quantity']), "unit" : i['unit'], "unit_price" : float(i['unit_price'])})
-
-items = []
-sold_list = []
-
+from function import *
+import datetime
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mix"
@@ -139,7 +103,7 @@ def sell_margin ():
     sub_list = []
     for i in sold_list:
         sub_list.append (i["quantity"] * i["unit_price"])
-    margin = 0.20
+    margin = 0.20 #20% margin
     sold_value = (sum(sub_list)) * margin
     rounded_margin = round(sold_value, 2)
     return dict(margin_value=rounded_margin)
@@ -159,6 +123,12 @@ def show_revenue ():
     revenue = float(one) + float(three) - float(two)
     rounded_revenue = round (revenue, 2)
     return dict(revenue=rounded_revenue)
+
+
+@app.context_processor
+def date_time ():
+    d = datetime.datetime.now()
+    return dict(day=(f"{d:%d}"), month=(f"{d:%m}"), year=d.year, hour=(f"{d:%H}"), minute=(f"{d:%M}"))
 
 
 if __name__ == "__main__":
