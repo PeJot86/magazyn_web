@@ -2,6 +2,7 @@
 {% block content %}
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dashboard.css') }}">
 
+</br>
 <h5>Edytuj:</h5>
 
 <table class="table table-striped">
@@ -12,6 +13,7 @@
       <th scope="col">Ilość</th>
       <th scope="col">Jednostka</th>
       <th scope="col">Cena jedn.</th>
+      <th scope="col">Sprzedaj wszystsko</th>
     </tr>
   </thead>
   <tbody>
@@ -23,7 +25,8 @@
       <td>{{item.quantity}}</td>
       <td>{{item.unit}}</td>
       <td>{{item.unit_price}}</td>
-      <td><a class="btn btn-danger btn-sm" href="{{url_for('delete_product', product_name=item.name) }}" role="button">Usuń</a></td>
+     
+      <td><a class="btn btn-danger btn-sm" href="{{url_for('delete_product', product_name=item.name) }}" role="button">Sprzedaj</a></td>
      
 
     </tr>

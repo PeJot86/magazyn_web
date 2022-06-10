@@ -8,7 +8,7 @@
 {% block content %}
 
 
-
+</br>
 <h5>Lista towarów</h5>
 
 <table class="table table-striped">
@@ -19,6 +19,7 @@
       <th scope="col">Ilość</th>
       <th scope="col">Jednostka</th>
       <th scope="col">Cena jedn.</th>
+      <th scope="col">Ilość</th>
     </tr>
   </thead>
 
@@ -29,12 +30,16 @@
         <td><a href="/{{ item.name }}">{{item.name}}</a></td>
         <td>{{item.quantity}}</td>
         <td>{{item.unit}}</td>
-        <td>{{item.unit_price}}</td>
+        <td>{{item.unit_price}} <strong>PLN</strong></td>
+
           <td><a class="btn btn-success btn-sm" href="{{ url_for('sell_product', product_name=item.name) }}" role="button">Sprzedaj</a></td>
           
+          
+          
+          
+          {% endfor %}  
       </tr>
       
-      {% endfor %}
       <form action="" method="POST">
        <tr> 
         <th scope="row"></th>

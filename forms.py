@@ -10,3 +10,5 @@ class ProductForm(FlaskForm):
    unit_price = DecimalField ('Price', validators=[DataRequired()])
 
 
+class SellForm(FlaskForm):
+   sell_form = DecimalField('Quantity', validators=[DataRequired()])

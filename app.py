@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
-from forms import  ProductForm
+from forms import  ProductForm, SellForm
 import csv
-import os.path
+
 
 
 def load_items_from_csv():
@@ -20,21 +20,33 @@ def export_items_to_csv():
             csvwriter.writerow(n)
 
 
-items = []
-sold_list =[]
+def export_sales_to_csv():
+    with open('Magazyn_sold.csv', mode='w', encoding="utf-8") as csv_file:
+        fieldnames = ['name', 'quantity', 'unit', 'unit_price']
+        csvwriter = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        csvwriter.writeheader()
+        for n in sold_list:
+            csvwriter.writerow(n)
 
+
+def load_sales_from_csv():
+    with open('Magazyn_sold.csv', newline='', encoding="utf-8") as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        for i in csvreader:
+            sold_list.append ({"name" : i['name'], "quantity" : float(i['quantity']), "unit" : i['unit'], "unit_price" : float(i['unit_price'])})
+
+items = []
+sold_list = []
 
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "mix"
-
 load_items_from_csv()
-
+load_sales_from_csv()
 
 
 @app.route("/")
 def homepage():
-    print (items)
     return render_template("base.html")
 
 
@@ -92,11 +104,61 @@ def sell_product (product_name):
             i['quantity'] = sell_quant_sum
             sold_list.append ({"name": product_name, "quantity" : sell_quantity, "unit" : i["unit"], "unit_price" : i["unit_price"]})
             export_items_to_csv()
+            export_sales_to_csv()
     return redirect(url_for("add_product"))   
 
 
+@app.route("/revenue", methods=["GET", "POST"])
+def costs_items ():
+    form = SellForm ()
+    return render_template ("revenue.html", form=form)
 
 
+@app.context_processor
+def show_costs ():
+    sum_list=[]
+    for i in items:
+        sum_list.append(i["quantity"] * i["unit_price"])
+    sum_value = (sum(sum_list))
+    rounded_sum = round(sum_value, 2)
+    return dict(sum_value=rounded_sum)
+
+
+@app.context_processor
+def get_income ():
+    sub_list = []
+    for i in sold_list:
+        sub_list.append (i["quantity"] * i["unit_price"])
+    sold_value = (sum(sub_list))
+    rounded_value = round(sold_value, 2)
+    return dict(sold_value=rounded_value)
+
+
+@app.context_processor
+def sell_margin ():
+    sub_list = []
+    for i in sold_list:
+        sub_list.append (i["quantity"] * i["unit_price"])
+    margin = 0.20
+    sold_value = (sum(sub_list)) * margin
+    rounded_margin = round(sold_value, 2)
+    return dict(margin_value=rounded_margin)
+  
+
+@app.context_processor   
+def show_revenue ():
+    profit = get_income()
+    cost = show_costs()
+    margin = sell_margin()
+    profit_v = (list(profit.values()))
+    cost_v = (list(cost.values()))
+    margin_v = (list(margin.values()))
+    one = (', '.join(map(str, profit_v)))
+    two = (', '.join(map(str, cost_v)))
+    three = (', '.join(map(str, margin_v)))
+    revenue = float(one) + float(three) - float(two)
+    rounded_revenue = round (revenue, 2)
+    return dict(revenue=rounded_revenue)
 
 
 if __name__ == "__main__":
